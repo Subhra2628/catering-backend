@@ -10,7 +10,7 @@ const Members = require("./Routes/MemberRoute");
 const adminroutes = require("./Adminlogin/adminroutes");
 const adminActions = require("./Routes/AdminRoute");
 const Otps = require("./OTP/otp");
-const rates = require("./Routes/rating.js");
+const rates = require("./Routes/rating");
 const path = require("path");
 
 const app = express();
