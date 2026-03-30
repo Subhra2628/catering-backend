@@ -1,7 +1,11 @@
 const db = require("./Db");
 
+
+const bcrypt = require("bcrypt");
+
 async function initDb() {
   try {
+    //  EVENTS TABLE
     await db.query(`
       CREATE TABLE IF NOT EXISTS events (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -11,15 +15,19 @@ async function initDb() {
       )
     `);
 
+    //  MEMBERS TABLE (UPDATED)
     await db.query(`
       CREATE TABLE IF NOT EXISTS members (
         id INT AUTO_INCREMENT PRIMARY KEY,
-        name VARCHAR(255) NOT NULL,
-        role VARCHAR(255) NOT NULL,
-        phone VARCHAR(20) NOT NULL
+        name VARCHAR(255) ,
+        role VARCHAR(255) ,
+        phone VARCHAR(20) ,
+        image VARCHAR(255),
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
     `);
 
+    //  OTHER TABLES
     await db.query(`
       CREATE TABLE IF NOT EXISTS otp_codes (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -38,8 +46,12 @@ async function initDb() {
         event_date DATE NOT NULL,
         guests INT NOT NULL,
         SetNotes TEXT,
-        user_email VARCHAR(255) NOT NULL
+        user_email VARCHAR(255) NOT NULL,
+        FOREIGN KEY (event_id) REFERENCES events(id)
+        ON DELETE CASCADE
+ON UPDATE CASCADE
       )
+
     `);
 
     await db.query(`
@@ -59,17 +71,54 @@ async function initDb() {
       )
     `);
 
-    // Insert default admin if not exists
-    const [admins] = await db.query("SELECT * FROM super_admin WHERE name = 'admin'");
+    // ✅ SECURE ADMIN
+    // const [admins] = await db.query("SELECT * FROM super_admin LIMIT 1");
+    const [admins] = await db.query("SELECT id FROM super_admin LIMIT 1");
+
     if (admins.length === 0) {
-      await db.query("INSERT INTO super_admin (name, password) VALUES ('admin', 'admin123')");
-      console.log("Default admin created: name=admin, password=admin123");
+      const hashedPassword = await bcrypt.hash("S3cure@Admin#2026!", 10);
+
+      await db.query(
+        "INSERT INTO super_admin (name, password) VALUES (?, ?)",
+        ["root_master_01", hashedPassword]
+      );
+
+      console.log("✅ Secure admin created");
     }
 
-    console.log("All tables created successfully");
-  } catch (err) {
-    console.error("DB init error:", err);
+  
+
+await db.query(`
+  INSERT IGNORE INTO events (id, name, price_per_head, description) 
+  VALUES 
+  (1, 'Wedding', 10, 'Full catering service'),
+  (2, 'Birthday', 7, 'Basic party catering'),
+  (3, 'Anniversary',10, 'Special event catering'),
+  (4, 'Others', 10, 'Custom events')
+`);
+await db.query(`
+INSERT IGNORE INTO members 
+(name, role, phone, created_at, image) 
+VALUES 
+('Bapan Ghosh','Manager','276567528769','2026-03-19 03:04:30','/images/Pic.jpg'),
+('Madhab Ghosh','Manager','123455677','2026-03-19 16:07:27','/images/Pic.jpg'),
+('Rajib Ghosh','Waiter','123455677','2026-03-19 16:13:05','/images/Pic.jpg'),
+('Victor Ghosh','Waiter','123455677','2026-03-19 16:13:05','/images/Pic.jpg'),
+('Pintu Ghosh','Waiter','123455677','2026-03-19 16:13:05','/images/Pic.jpg'),
+('Ashutosh Ghosh','Waiter','123455677','2026-03-19 16:13:05','/images/Pic.jpg'),
+('Hitu Ghosh','Waiter','123455677','2026-03-19 16:13:05','/images/Pic.jpg'),
+('Biswajit Ghosh','Waiter','123455677','2026-03-19 16:13:05','/images/Pic.jpg'),
+('Bikramjit Ghosh','Waiter','123455677','2026-03-19 16:13:05','/images/Pic.jpg'),
+('Kuntol Ghosh','Waiter','123455677','2026-03-19 16:13:05','/images/Pic.jpg'),
+('Somnath Ghosh','Waiter','123455677','2026-03-19 16:13:05','/images/Pic.jpg'),
+('Debdut Ghosh','Waiter','123455677','2026-03-19 16:13:05','/images/Pic.jpg'),
+('Karna Ghosh','Helper','123455677','2026-03-19 16:13:05','/images/Pic.jpg'),
+('Ujjal Ghosh','Waiter','123455677','2026-03-19 16:13:05','/images/Pic.jpg'),
+('Kartik Ghosh','Waiter',NULL,'2026-03-22 04:02:38','/images/Pic.jpg')
+`);
+  }
+  catch (error) {
+    console.error(" DB Init Error:", error);
   }
 }
-
 module.exports = initDb;
