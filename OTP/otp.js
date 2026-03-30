@@ -21,7 +21,8 @@ router.post("/", async (req, res) => {
   try {
     const { email } = req.body;
     if (!email) return res.status(400).json({ message: "Email required" });
-
+// Delete old OTPs for this email
+await db.query("DELETE FROM otp_codes WHERE email=?", [email]);
     const emailOtp = generateOTP();
     const expiresAt = new Date(Date.now() + 5 * 60 * 1000); // 5 min
 

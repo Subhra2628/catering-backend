@@ -5,7 +5,9 @@ const db = require("../Config/Db");
 router.post("/", async (req, res) => {
   try {
     const { event_id, customer_name, contact, event_date, guests,notes, email, emailOtp } = req.body;
-
+if (!event_id || !customer_name || !contact || !event_date || !guests || !email || !emailOtp) {
+  return res.status(400).json({ message: "Missing required booking fields" });
+}
     // Validate OTP
     const [otpRows] = await db.query(
       "SELECT * FROM otp_codes WHERE email=? AND email_otp=? AND expires_at > NOW()",
