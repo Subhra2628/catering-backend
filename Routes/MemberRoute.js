@@ -3,9 +3,19 @@ const router = express.Router();
 const db = require("../Config/Db");
 
 // GET all members
-router.get("/", async(req, res) => {
-  try{
+// router.get("/", async(req, res) => {
+//   try{
+//     const [members] = await db.query("SELECT * FROM members");
+//     res.json(members);
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).json({ message: "Server error fetching members" });
+//   }
+// });
+router.get("/", async (req, res) => {
+  try {
     const [members] = await db.query("SELECT * FROM members");
+    console.log("Members fetched from DB:", members); // add this
     res.json(members);
   } catch (err) {
     console.error(err);
