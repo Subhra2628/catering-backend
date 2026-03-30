@@ -73,20 +73,41 @@ ON UPDATE CASCADE
 
     // ✅ SECURE ADMIN
     // const [admins] = await db.query("SELECT * FROM super_admin LIMIT 1");
-    const [admins] = await db.query("SELECT id FROM super_admin LIMIT 1");
+    // const [admins] = await db.query("SELECT id FROM super_admin LIMIT 1");
 
-    if (admins.length === 0) {
-      const hashedPassword = await bcrypt.hash("S3cure@Admin#2026!", 10);
+    // if (admins.length === 0) {
+    //   const hashedPassword = await bcrypt.hash("S3cure@Admin#2026!", 10);
 
-      await db.query(
-        "INSERT INTO super_admin (name, password) VALUES (?, ?)",
-        ["root_master_01", hashedPassword]
-      );
+    //   await db.query(
+    //     "INSERT INTO super_admin (name, password) VALUES (?, ?)",
+    //     ["root_master_01", hashedPassword]
+    //   );
 
-      console.log("✅ Secure admin created");
-    }
+    //   console.log("✅ Secure admin created");
+    // }
 
-  
+  const [admins] = await db.query("SELECT id FROM super_admin LIMIT 1");
+
+const newName = "root_master_01"; // new admin name
+const newPassword = "S3cure@Admin#2026!"; // new password
+
+const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+if (admins.length === 0) {
+  // No admin exists → insert new
+  await db.query(
+    "INSERT INTO super_admin (name, password) VALUES (?, ?)",
+    [newName, hashedPassword]
+  );
+  console.log("✅ Secure admin created");
+} else {
+  // Admin exists → update existing
+  await db.query(
+    "UPDATE super_admin SET name = ?, password = ? WHERE id = ?",
+    [newName, hashedPassword, admins[0].id]
+  );
+  console.log("✅ Admin name and password updated");
+}
 
 await db.query(`
   INSERT IGNORE INTO events (id, name, price_per_head, description) 
