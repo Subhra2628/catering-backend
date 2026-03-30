@@ -15,15 +15,20 @@ const path = require("path");
 const app = express();
 
 // ✅ CORS middleware must be BEFORE routes
+// app.use(cors({
+//   origin: [
+//     "http://localhost:5173",
+//     "https://deployment-catering-frontend-3e9bsci7s-subhradips-projects-f5cbf0de.vercel.app",
+//     "https://domain-catering-frontend-eta.vercel.app"
+//   ],
+//   methods: ["GET", "POST", "PUT", "DELETE"],
+//   allowedHeaders: ["Content-Type", "Authorization"],
+//   // remove credentials unless you really need cookies
+// }));
 app.use(cors({
-  origin: [
-    "http://localhost:5173",
-    "https://deployment-catering-frontend-3e9bsci7s-subhradips-projects-f5cbf0de.vercel.app",
-    "https://domain-catering-frontend-eta.vercel.app"
-  ],
+  origin: "*",
   methods: ["GET", "POST", "PUT", "DELETE"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-  // remove credentials unless you really need cookies
+  allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
 // ✅ Parse JSON & URL-encoded bodies
