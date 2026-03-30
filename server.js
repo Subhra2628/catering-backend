@@ -23,6 +23,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors({
   origin: [
     "http://localhost:5173",
+    "https://deployment-catering-frontend-3e9bsci7s-subhradips-projects-f5cbf0de.vercel.app",
+    "https://domain-catering-frontend-eta.vercel.app"
    
   ],
    methods: ["GET", "POST", "PUT", "DELETE"],
