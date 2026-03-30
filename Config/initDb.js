@@ -96,8 +96,11 @@ await db.query(`
   (3, 'Anniversary',10, 'Special event catering'),
   (4, 'Others', 10, 'Custom events')
 `);
-const [result] = await db.query(`
-INSERT IGNORE INTO members 
+
+const [rows] = await db.query("SELECT COUNT(*) as count FROM members");
+if (rows[0].count === 0) {
+  const [result] = await db.query(`
+INSERT INTO members 
 (name, role, phone, created_at, image) 
 VALUES 
 ('Bapan Ghosh','Manager','276567528769','2026-03-19 03:04:30','/images/Pic.jpg'),
@@ -116,10 +119,14 @@ VALUES
 ('Ujjal Ghosh','Waiter','123455677','2026-03-19 16:13:05','/images/Pic.jpg'),
 ('Kartik Ghosh','Waiter',NULL,'2026-03-22 04:02:38','/images/Pic.jpg')
 `);
-
+  
 console.log("Inserted members:", result);
   }
-   catch (error) {
+    else {
+    console.log("⚠️ Members already exist");
+  }
+
+  }  catch (error) {
     console.error("❌ DB Init Error:", error);
   }
 }
