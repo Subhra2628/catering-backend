@@ -1,33 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const db = require("../Config/Db");
-const nodemailer = require("nodemailer");
-const dns = require("dns").promises;
+const { Resend } = require("resend");
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 function generateOTP() {
   return Math.floor(100000 + Math.random() * 900000).toString();
-}
-
-async function sendOTPEmail(to, otp) {
-  const [ipv4] = await dns.resolve4("smtp.gmail.com");
-
-  const transporter = nodemailer.createTransport({
-    host: ipv4,
-    port: 587,
-    secure: false,
-    tls: { servername: "smtp.gmail.com" },
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS,
-    },
-  });
-
-  await transporter.sendMail({
-    from: `"Abhinandan Caterer" <${process.env.EMAIL_USER}>`,
-    to,
-    subject: "Your OTP Code",
-    text: `Your OTP is: ${otp}. It will expire in 5 minutes.`,
-  });
 }
 
 router.post("/", async (req, res) => {
@@ -45,7 +24,12 @@ router.post("/", async (req, res) => {
       [email, emailOtp, expiresAt]
     );
 
-    await sendOTPEmail(email, emailOtp);
+    await resend.emails.send({
+      from: "Abhinandan Caterer <onboarding@resend.dev>",
+      to: email,
+      subject: "Your OTP Code",
+      text: `Your OTP is: ${emailOtp}. It will expire in 5 minutes.`,
+    });
 
     console.log(`OTP sent to ${email}`);
     res.json({ message: "OTP sent successfully" });
