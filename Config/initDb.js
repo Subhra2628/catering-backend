@@ -88,25 +88,23 @@ ON UPDATE CASCADE
 
   const [admins] = await db.query("SELECT id FROM super_admin LIMIT 1");
 
-const newName = "root_master_01"; // new admin name
-const newPassword = "S3cure@Admin#2026!"; // new password
-
-const hashedPassword = await bcrypt.hash(newPassword, 10);
+const newName = "root_master_01";   // new admin name
+const newPassword = "S3cure@Admin#2026!"; // new password (plain text)
 
 if (admins.length === 0) {
   // No admin exists → insert new
   await db.query(
     "INSERT INTO super_admin (name, password) VALUES (?, ?)",
-    [newName, hashedPassword]
+    [newName, newPassword]
   );
-  console.log("✅ Secure admin created");
+  console.log(" Secure admin created (plain text)");
 } else {
   // Admin exists → update existing
   await db.query(
     "UPDATE super_admin SET name = ?, password = ? WHERE id = ?",
-    [newName, hashedPassword, admins[0].id]
+    [newName, newPassword, admins[0].id]
   );
-  console.log("✅ Admin name and password updated");
+  console.log(" Admin name and password updated (plain text)");
 }
 
 await db.query(`
