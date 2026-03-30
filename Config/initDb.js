@@ -96,7 +96,7 @@ await db.query(`
   (3, 'Anniversary',10, 'Special event catering'),
   (4, 'Others', 10, 'Custom events')
 `);
-await db.query(`
+const [result] = await db.query(`
 INSERT IGNORE INTO members 
 (name, role, phone, created_at, image) 
 VALUES 
@@ -116,9 +116,11 @@ VALUES
 ('Ujjal Ghosh','Waiter','123455677','2026-03-19 16:13:05','/images/Pic.jpg'),
 ('Kartik Ghosh','Waiter',NULL,'2026-03-22 04:02:38','/images/Pic.jpg')
 `);
+
+console.log("Inserted members:", result);
   }
-  catch (error) {
-    console.error(" DB Init Error:", error);
+   catch (error) {
+    console.error("❌ DB Init Error:", error);
   }
 }
 module.exports = initDb;
