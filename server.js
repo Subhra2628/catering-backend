@@ -9,7 +9,7 @@ const Booking = require("./Routes/BookingRoute");
 const Members = require("./Routes/MemberRoute");
 const adminroutes = require("./Adminlogin/adminroutes");
 const adminActions = require("./Routes/AdminRoute");
-const Otps = require("./OTP/otp");
+// const Otps = require("./OTP/otp");
 const rates = require("./Routes/rating");
 const path = require("path");
 
@@ -41,7 +41,7 @@ app.use("/api/admin", adminroutes);
 app.use("/api/events", eventroute);
 app.use("/api/bookings", Booking);
 app.use("/api/members", Members);
-app.use("/api/otp", Otps);
+// app.use("/api/otp", Otps);
 app.use("/api/rating/manage", rates);
 app.use("/api/admin", adminActions);
 
