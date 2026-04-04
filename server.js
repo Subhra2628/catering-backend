@@ -7,11 +7,11 @@ const initDb = require("./Config/initDb");
 const eventroute = require("./Routes/EventsRoute");
 const Booking = require("./Routes/BookingRoute");
 const Members = require("./Routes/MemberRoute");
-const adminroutes = require("./Adminlogin/adminroutes");
-const adminActions = require("./Routes/AdminRoute");
+const adminroutes = require("./Routes/AdminRoute");
+// const adminActions = require("./Routes/AdminRoute");
 const rates = require("./Routes/rating");
 const path = require("path");
-
+const Counterroute=require("./Routes/CounterRoute");
 const app = express();
 
 // ✅ CORS middleware must be BEFORE routes
@@ -43,10 +43,13 @@ app.locals.db = db;
 // ✅ API routes
 app.use("/api/admin", adminroutes);
 app.use("/api/events", eventroute);
-app.use("/api/bookings", Booking);
+// app.use("/api/bookings/count",Counterroute);
+// app.use("/api/bookings", Booking);
+// app.use("/api/bookings", Counterroute); // for /count
+app.use("/api/bookings", Booking);      // for other booking APIs
 app.use("/api/members", Members);
 app.use("/api/rating/manage", rates);
-app.use("/api/admin", adminActions);
+// app.use("/api/admin", adminActions);
 
 // ✅ Root route
 app.get("/", (req, res) => {
@@ -55,8 +58,13 @@ app.get("/", (req, res) => {
 
 // ✅ Start server
 const PORT = process.env.PORT || 3000;
-initDb().then(() => {
-  app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+
+
+async function startServer() {
+  await initDb(); // ✅ now valid
+
+  app.listen(process.env.PORT || 5000, () => {
+    console.log("🚀 Server running...");
   });
-});
+}
+startServer();
