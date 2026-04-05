@@ -122,7 +122,7 @@ await db.query(`
   ('Victor Ghosh','Waiter','123455677','2026-03-19 16:13:05','/images/Pic.jpg'),
   ('Pintu Ghosh','Waiter','123455677','2026-03-19 16:13:05','/images/Pic.jpg'),
   ('Ashutosh Ghosh','Waiter','123455677','2026-03-19 16:13:05','/images/Pic.jpg'),
-  ('Hitu Ghosh','Waiter','123455677','2026-03-19 16:13:05','/images/Pic.jpg'),
+  ('Hitu Ghosh','Waiter','123455677','2026-03-19 16:13:05','/images/Hitu.jpg'),
   ('Biswajit Ghosh','Waiter','123455677','2026-03-19 16:13:05','/images/Pic.jpg'),
   ('Bikramjit Ghosh','Waiter','123455677','2026-03-19 16:13:05','/images/Pic.jpg'),
   ('Kuntol Ghosh','Waiter','123455677','2026-03-19 16:13:05','/images/Pic.jpg'),
