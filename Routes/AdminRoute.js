@@ -163,8 +163,32 @@ router.delete("/events/:id", verifyAdmin, async (req, res) => {
 
   res.json({ message: "Event deleted successfully" });
 });
-router.use((req, res, next) => {
-  console.log("ADMIN ROUTE HIT:", req.method, req.url);
-  next();
+
+// ✅ ADD EVENT
+router.post("/events", verifyAdmin, async (req, res) => {
+  console.log("🔥 ADD EVENT HIT");
+
+  const { name, price_per_head, description } = req.body;
+
+  // basic validation
+  if (!name || !price_per_head) {
+    return res.status(400).json({ message: "Name and price are required" });
+  }
+
+  try {
+    const [result] = await db.query(
+      "INSERT INTO events (name, price_per_head, description) VALUES (?, ?, ?)",
+      [name, price_per_head, description]
+    );
+
+    res.json({
+      message: "Event created successfully",
+      id: result.insertId,
+    });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Insert failed" });
+  }
 });
 module.exports = router;
